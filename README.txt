@@ -44,8 +44,8 @@ Nexys / Nexys2 boards.
     http://www.digilentinc.com/nexys/
     http://www.digilentinc.com/nexys2/
 
-The hardware-specific code file is hw_nexys.c, just change the line
-"HARDWARE=hw_basic" to "HARDWARE=hw_nexys" in the file "Makefile" to use it.
+The hardware-specific code file is hw_nexys.c. Use the usbjtag-nexys.hex
+firmware file.
 
 Also, you may use the "nexys2prog" script by Andy Ross, available from the
 same place this code is available from:
@@ -67,11 +67,7 @@ bit-addressable I/O pins (port A,B,C or D), I suggest you make a copy of
 hw_basic.c and adapt the definitions and ProgIO_Init() in it to your needs.
 The file hw_saxo_l is even simpler to adapt if you want only JTAG and no AS/PS
 mode.  If your signals are not on bit-addressable I/Os (that is, you're using
-port E), you could base your adaptation on the slower hw_xpcu_i.c. You may
-specify the name of your adapted hardware-specific file when "make"ing, e.g.:
-
-  make HARDWARE=hw_saxo_l
-
+port E), you could base your adaptation on the slower hw_xpcu_i.c.
 
 The USB identification data (vendor/product ID, strings, ...) can be modified
 in dscr.a51. The firmware emulates the 128 byte EEPROM that usually holds
@@ -84,12 +80,10 @@ Jean/fpga4fun!).
 
 == Using it with Xilinx JTAG cable ==
 
-There is code to support running in the "Xilinx Platform Cable USB". If you
-select HARDWARE=hw_xpcu_i or hw_xpcu_x at the top of the Makefile, a firmware
+There is code to support running in the "Xilinx Platform Cable USB". A firmware
 for the XPCU will be built. I've tested this only with unmodified CPLD version
 18 (0x12) on a Spartan-3E starter kit, as it was programmed by my WebPack 8.2i.
 The code needs optimization; yet it is merely a proof of concept.
-Compile for the XPCU with e.g. "make HARDWARE=hw_xpcu_x".
 
  hw_xpcu_i: Access "internal" chain (the XPCU CPLD, IC3, itself)
  hw_xpcu_x: Access "external" chain (the Spartan 3E, PROM, etc.)
