@@ -28,10 +28,18 @@ ifeq (${HARDWARE},)
   #HARDWARE=hw_nexys
 endif
 
-CC=sdcc
+# Some distros add a prefix to sdcc binaries. For example, in fedora the
+# binary is 'sdcc-sdcc'. Allow specifying this prefix via SDCC_PREFIX.
+# Usage example: $ make SDCC_PREFIX=sdcc-
+SDCC_PREFIX ?=
+
+CC = $(SDCC_PREFIX)sdcc
+AS = $(SDCC_PREFIX)sdas8051
+AR = $(SDCC_PREFIX)sdcclib
+PACKIHX=$(SDCC_PREFIX)packihx
+
 CFLAGS+=-mmcs51 --no-xinit-opt -I${LIBDIR} -D${HARDWARE}
 
-AS=sdas8051
 ASFLAGS+=-plosgff
 
 LDFLAGS=--code-loc 0x0000 --code-size 0x1800
@@ -71,13 +79,13 @@ dscr.a51: dscr.a51.in
 
 usbjtag.hex: vectors.rel usbjtag.rel dscr.rel eeprom.rel ${HARDWARE}.rel startup.rel ${LIBDIR}/${LIB}
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $+
-	packihx $@ > .tmp.hex
+	$(PACKIHX) $@ > .tmp.hex
 	rm $@
 	mv .tmp.hex $@
 	ls -al $@
 
 ${LIBDIR}/${LIB}:
-	make -C ${LIBDIR}
+	make -C ${LIBDIR} CC=$(CC) AR=$(AR)
 
 .PHONY: boot
 boot: std.hex
