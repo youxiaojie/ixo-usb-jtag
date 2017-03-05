@@ -38,7 +38,7 @@ AS = $(SDCC_PREFIX)sdas8051
 AR = $(SDCC_PREFIX)sdcclib
 PACKIHX=$(SDCC_PREFIX)packihx
 
-CFLAGS+=-mmcs51 --no-xinit-opt -I${LIBDIR} -D${HARDWARE}
+CFLAGS+=-mmcs51 --no-xinit-opt -I${LIBDIR}
 
 ASFLAGS+=-plosgff
 
