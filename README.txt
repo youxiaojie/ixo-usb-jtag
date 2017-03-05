@@ -36,6 +36,17 @@ There's a discussion thread in the fpga4fun forum about this firmware:
     http://www.fpga4fun.com/forum/viewtopic.php?t=483
 
 
+== Use with the Digilent JTAG-USB cable ==
+
+This cable is supported through the usbjtag-dj_usb.hex firmware. the TDO line
+is level-shifted through a single transistor, which results in the TDO signal
+being inverted as it enters the FX2. The firmware takes care of the inversion
+and returns the correct data.
+
+Note that this only applies to the JTAG-USB cable, and not the JTAG-HS series.
+The JTAG-HS is based on FTDI chips, not the Cypress FX2.
+
+
 == Use with Nexys 1 / 2 Boards ==
 
 Through a contribution by Sune Mai, this code can be used with the Digilent
