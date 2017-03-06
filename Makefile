@@ -76,11 +76,11 @@ dscr_%.a51: dscr.a51.in
 %.bix: %.hex
 	objcopy -I ihex -O binary $< $@
 
-usbjtag-%.hex: vectors.rel usbjtag.rel dscr_%.rel eeprom.rel hw_%.rel startup.rel ${LIBDIR}/${LIB}
+temp-%.hex: vectors.rel usbjtag.rel dscr_%.rel eeprom.rel hw_%.rel startup.rel ${LIBDIR}/${LIB}
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $+
-	$(PACKIHX) $@ > .tmp.hex
-	rm $@
-	mv .tmp.hex $@
+
+usbjtag-%.hex: temp-%.hex
+	$(PACKIHX) $^ > $@
 	ls -al $@
 
 ${LIBDIR}/${LIB}:
