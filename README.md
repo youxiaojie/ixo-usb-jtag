@@ -1,5 +1,4 @@
-# Altera Bus Blaster emulation using Cypress FX2 chip
-# ixo-usb-jtag
+# ixo-usb-jtag - Altera Bus Blaster emulation using Cypress FX2 chip
 
 ## General information
 
