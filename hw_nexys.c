@@ -20,7 +20,6 @@
  * This code was copied from hw_basic.c and adapted for the Digilent Nexys / Nexys 2 boards
  * by Sune Mai (Oct 2008) with minor cleanups by Hauke Daempfling (May 2010).
  * http://www.fpga4fun.com/forum/viewtopic.php?t=483&start=50
- * To use, change HARDWARE=hw_nexys in Makefile.
  */
 
 #include <fx2regs.h>

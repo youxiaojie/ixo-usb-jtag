@@ -2,6 +2,7 @@
 # Makefile for usb_jtag FX2 firmware
 #-----------------------------------------------------------------------------
 # Copyright 2007 Kolja Waschk, ixo.de
+# Copyright (C) 2017 Alexandru Gagniuc <mr.nuke.me@gmail.com>
 #-----------------------------------------------------------------------------
 # This code is part of usbjtag. usbjtag is free software; you can redistribute
 # it and/or modify it under the terms of the GNU General Public License as
@@ -20,18 +21,24 @@ LIB=libfx2.lib
 
 SHELL := /bin/bash
 
-ifeq (${HARDWARE},)
-  HARDWARE=hw_basic
-  #HARDWARE=hw_saxo_l
-  #HARDWARE=hw_xpcu_i
-  #HARDWARE=hw_xpcu_x
-  #HARDWARE=hw_nexys
-endif
+# Specify a list of targets to build. Each target requires a hw_$target.c file
+# to be present, and will produce a usbjtag-$target.hex output file.
+TARGETS=basic dj_usb saxo_l xpcu_i xpcu_x nexys opsis
 
-CC=sdcc
-CFLAGS+=-mmcs51 --no-xinit-opt -I${LIBDIR} -D${HARDWARE}
+HEX_OUTPUTS=$(TARGETS:%=usbjtag-%.hex)
 
-AS=sdas8051
+# Some distros add a prefix to sdcc binaries. For example, in fedora the
+# binary is 'sdcc-sdcc'. Allow specifying this prefix via SDCC_PREFIX.
+# Usage example: $ make SDCC_PREFIX=sdcc-
+SDCC_PREFIX ?=
+
+CC = $(SDCC_PREFIX)sdcc
+AS = $(SDCC_PREFIX)sdas8051
+AR = $(SDCC_PREFIX)sdcclib
+PACKIHX=$(SDCC_PREFIX)packihx
+
+CFLAGS+=-mmcs51 --no-xinit-opt -I${LIBDIR}
+
 ASFLAGS+=-plosgff
 
 LDFLAGS=--code-loc 0x0000 --code-size 0x1800
@@ -45,10 +52,10 @@ LDFLAGS+=-L ${LIBDIR}
 %.rel : %.c
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
 
-default: usbjtag.hex
+default: $(HEX_OUTPUTS)
 
-dscr.a51: dscr.a51.in
-	export H="${HARDWARE}~~~~~~~~~"; cat dscr.a51.in | \
+dscr_%.a51: dscr.a51.in
+	export H="hw_$*~~~~~~~~~"; cat $^ | \
 	 sed \
           -e"s/\$$H0/$${H:0:1}/" \
           -e"s/\$$H1/$${H:1:1}/" \
@@ -62,22 +69,22 @@ dscr.a51: dscr.a51.in
           -e"s/\$$H9/$${H:9:1}/" | \
 	 sed \
 	  -e"s/        .db        '~, 0//" \
-	 > dscr.a51
+	 > $@
 
 #%.iic : %.hex
 #	./hex2bix -ir -f 0xC2 -m 0xF000 -c 0x1 -o $@ $<
 %.bix: %.hex
 	objcopy -I ihex -O binary $< $@
 
-usbjtag.hex: vectors.rel usbjtag.rel dscr.rel eeprom.rel ${HARDWARE}.rel startup.rel ${LIBDIR}/${LIB}
+temp-%.hex: vectors.rel usbjtag.rel dscr_%.rel eeprom.rel hw_%.rel startup.rel ${LIBDIR}/${LIB}
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $+
-	packihx $@ > .tmp.hex
-	rm $@
-	mv .tmp.hex $@
+
+usbjtag-%.hex: temp-%.hex
+	$(PACKIHX) $^ > $@
 	ls -al $@
 
 ${LIBDIR}/${LIB}:
-	make -C ${LIBDIR}
+	make -C ${LIBDIR} CC=$(CC) AR=$(AR)
 
 .PHONY: boot
 boot: std.hex
@@ -93,16 +100,16 @@ ref:
 	-test -e /dev/tracii_xl2  && /sbin/fxload -D /dev/tracii_xl2  -I ${REF} -t fx2
 	-test -e /dev/xilinx_xpcu && /sbin/fxload -D /dev/xilinx_xpcu -I ${REF} -t fx2
 
-dscr.rel: dscr.a51
+dscr_%.rel: dscr_%.a51
 eeprom.rel: eeprom.c eeprom.h
 usbjtag.rel: usbjtag.c hardware.h eeprom.h
-${HARDWARE}.rel: ${HARDWARE}.c hardware.h
+hw_%.rel: hw_%.c hardware.h
 
 .PHONY: clean distclean
 
 clean:
 	make -C ${LIBDIR} clean
-	rm -f *.lst *.asm *.lib *.sym *.rel *.mem *.map *.rst *.lnk *.lk *.hex dscr.a51
+	rm -f *.lst *.asm *.lib *.sym *.rel *.mem *.map *.rst *.lnk *.lk *.hex dscr_%.a51
 
 distclean: clean
 
