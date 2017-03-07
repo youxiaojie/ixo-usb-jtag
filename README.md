@@ -1,7 +1,7 @@
-usb_jtag using Cypress FX2 chip
-===============================
+# Altera Bus Blaster emulation using Cypress FX2 chip
+# ixo-usb-jtag
 
-== General information ==
+## General information
 
 The code in this directory is for Cypress FX2 (e.g. CY7C68013A) and can be
 compiled with the SDCC compiler (I tried version 2.6 as shipped with Ubuntu
@@ -13,6 +13,7 @@ for a basic JTAG adapter. I don't have detailed schematics available; my test
 setup consists of a FX2 on a custom board where it's directly connected to a
 Cyclone FPGA.
 
+```
         ____________
        |            |
        | Cypress    |
@@ -23,20 +24,21 @@ Cyclone FPGA.
        |             |
        | 24 MHz XTAL |
        |_____________|
+```
 
 
 Similar boards are available from fpga4fun.com - the boards named "Saxo-L" and
 "Xylo-EM" are pre-wired for use with an adapted version of my code, while
 "Saxo" and "Xylo" can be used after soldering 4 extra wires:
 
-	http://www.fpga4fun.com/board_Xylo.html
+    http://www.fpga4fun.com/board_Xylo.html
 
 There's a discussion thread in the fpga4fun forum about this firmware:
 
     http://www.fpga4fun.com/forum/viewtopic.php?t=483
 
 
-== Use with the Digilent JTAG-USB cable ==
+## Digilent JTAG-USB cable
 
 This cable is supported through the usbjtag-dj_usb.hex firmware. the TDO line
 is level-shifted through a single transistor, which results in the TDO signal
@@ -47,7 +49,7 @@ Note that this only applies to the JTAG-USB cable, and not the JTAG-HS series.
 The JTAG-HS is based on FTDI chips, not the Cypress FX2.
 
 
-== Use with Digilent Nexys 1 / 2 or Atlys Boards ==
+## Digilent Nexys 1 / 2 or Atlys Boards
 
 Through a contribution by Sune Mai, this code can be used with the Digilent
 Nexys / Nexys2 and Atlys boards.
@@ -65,7 +67,7 @@ same place this code is available from:
     http://ixo-jtag.sourceforge.net/
 
 
-== Use with Numato Opsis Boards ==
+## Numato Opsis Boards
 
 There is code to support running on the Opsis board from Numato.
 
@@ -78,25 +80,24 @@ More information about how the FX2 is configured on the Opsis board can be
 found at https://opsis.hdmi2usb.tv/features/usb-peripheral.html
 
 
-== Using it with Xilinx JTAG cable ==
+## Xilinx JTAG cable
 
 There is code to support running in the "Xilinx Platform Cable USB". A firmware
 for the XPCU will be built. I've tested this only with unmodified CPLD version
 18 (0x12) on a Spartan-3E starter kit, as it was programmed by my WebPack 8.2i.
 The code needs optimization; yet it is merely a proof of concept.
 
- hw_xpcu_i: Access "internal" chain (the XPCU CPLD, IC3, itself)
- hw_xpcu_x: Access "external" chain (the Spartan 3E, PROM, etc.)
+ * hw_xpcu_i: Access "internal" chain (the XPCU CPLD, IC3, itself)
+ * hw_xpcu_x: Access "external" chain (the Spartan 3E, PROM, etc.)
 
-
-== Adapting the code to your hardware ==
+## Adapting the code to your hardware
 
 As is, the code assumes the following pin assignment:
 
- Port C.0: TDI
- Port C.1: TDO
- Port C.2: TCK
- Port C.3: TMS
+ * Port C.0: TDI
+ * Port C.1: TDO
+ * Port C.2: TCK
+ * Port C.3: TMS
 
 Other assignments are possible. If you have your signals connected to
 bit-addressable I/O pins (port A,B,C or D), I suggest you make a copy of
@@ -114,7 +115,7 @@ The WAKEUP pin should be high for the re-numeration to work reliably (thanks
 Jean/fpga4fun!).
 
 
-== History ==
+# History
 
 Changes since previous release 2008-07-05:
   - Imported to SourceForge, please see the project page:
