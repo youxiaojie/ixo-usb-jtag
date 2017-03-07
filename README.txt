@@ -47,13 +47,14 @@ Note that this only applies to the JTAG-USB cable, and not the JTAG-HS series.
 The JTAG-HS is based on FTDI chips, not the Cypress FX2.
 
 
-== Use with Nexys 1 / 2 Boards ==
+== Use with Digilent Nexys 1 / 2 or Atlys Boards ==
 
 Through a contribution by Sune Mai, this code can be used with the Digilent
-Nexys / Nexys2 boards.
+Nexys / Nexys2 and Atlys boards.
 
     http://www.digilentinc.com/nexys/
     http://www.digilentinc.com/nexys2/
+    http://www.digilentinc.com/atlys/
 
 The hardware-specific code file is hw_nexys.c. Use the usbjtag-nexys.hex
 firmware file.
@@ -62,6 +63,30 @@ Also, you may use the "nexys2prog" script by Andy Ross, available from the
 same place this code is available from:
 
     http://ixo-jtag.sourceforge.net/
+
+
+== Use with Numato Opsis Boards ==
+
+There is code to support running on the Opsis board from Numato.
+
+    http://numato.com/numato-opsis-fpga-based-open-video-platform/
+
+The hardware-specific code file is hw_opsis.c. Use the usbjtag-opsis.hex
+firmware file.
+
+More information about how the FX2 is configured on the Opsis board can be
+found at https://opsis.hdmi2usb.tv/features/usb-peripheral.html
+
+
+== Using it with Xilinx JTAG cable ==
+
+There is code to support running in the "Xilinx Platform Cable USB". A firmware
+for the XPCU will be built. I've tested this only with unmodified CPLD version
+18 (0x12) on a Spartan-3E starter kit, as it was programmed by my WebPack 8.2i.
+The code needs optimization; yet it is merely a proof of concept.
+
+ hw_xpcu_i: Access "internal" chain (the XPCU CPLD, IC3, itself)
+ hw_xpcu_x: Access "external" chain (the Spartan 3E, PROM, etc.)
 
 
 == Adapting the code to your hardware ==
@@ -87,17 +112,6 @@ content (including checksum) is computed from the data in dscr.a51 as well.
 
 The WAKEUP pin should be high for the re-numeration to work reliably (thanks
 Jean/fpga4fun!).
-
-
-== Using it with Xilinx JTAG cable ==
-
-There is code to support running in the "Xilinx Platform Cable USB". A firmware
-for the XPCU will be built. I've tested this only with unmodified CPLD version
-18 (0x12) on a Spartan-3E starter kit, as it was programmed by my WebPack 8.2i.
-The code needs optimization; yet it is merely a proof of concept.
-
- hw_xpcu_i: Access "internal" chain (the XPCU CPLD, IC3, itself)
- hw_xpcu_x: Access "external" chain (the Spartan 3E, PROM, etc.)
 
 
 == History ==
