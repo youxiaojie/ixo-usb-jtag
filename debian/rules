@@ -12,7 +12,7 @@ UPSTREAM_CHECKOUT=ixo-usb-jtag-$(UPSTREAM_VERSION)
 
 DEB_BUILD_ARCH_CPU ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH_CPU)
 
-HARDWARE=hw_basic hw_saxo_l hw_xpcu_i hw_xpcu_x hw_nexys hw_opsis
+HARDWARE=basic dj_usb saxo_l xpcu_i xpcu_x nexys opsis
 
 get-orig-source:
 	git clone $(UPSTREAM_GIT) $(UPSTREAM_CHECKOUT)
@@ -33,7 +33,7 @@ build-indep-stamp:
 	for HW in $(HARDWARE); do \
 		make clean || exit 1; \
 		HARDWARE=$$HW $(MAKE) || exit 1; \
-		cp usbjtag.hex ./output/$$HW.hex || exit 1; \
+		cp usbjtag-$$HW.hex ./output/usbjtag-$$HW.hex || exit 1; \
 		make clean || exit 1; \
 	done
 	touch build-indep-stamp
@@ -50,7 +50,7 @@ install: build-indep
 	dh_installdirs
 	
 	mkdir -p $(CURDIR)/debian/ixo-usb-jtag/lib/firmware/ixo-usb-jtag
-	for HW in $(HARDWARE); do install -m644 ./output/$$HW.hex $(CURDIR)/debian/ixo-usb-jtag/lib/firmware/ixo-usb-jtag; done
+	for HW in $(HARDWARE); do install -m644 ./output/usbjtag-$$HW.hex $(CURDIR)/debian/ixo-usb-jtag/lib/firmware/ixo-usb-jtag; done
 	mkdir -p $(CURDIR)/debian/ixo-usb-jtag/lib/udev/rules.d
 	install -m644 scripts/ixo-usb-jtag.rules $(CURDIR)/debian/ixo-usb-jtag/lib/udev/rules.d/85-ixo-usb-jtag.rules
 
