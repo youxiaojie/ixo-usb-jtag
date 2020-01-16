@@ -1,20 +1,22 @@
 Source: ixo-usb-jtag
-Maintainer: TimVideos Developers <timvideos@googlegroups.com>
-Uploaders: Tim 'mithro' Ansell <mithro@mithis.com>
-Section: misc
-Priority: extra
-Build-Depends: debhelper (>= 7), sdcc
-Standards-Version: 3.9.3
-Homepage: http://github.com/mithro/ixo-usb-jtag
+Maintainer: Stefano Rivera <stefanor@debian.org>
+Section: embedded
+Priority: optional
+Build-Depends: debhelper (>= 9), sdcc
+Standards-Version: 4.1.3
+Homepage: https://github.com/mithro/ixo-usb-jtag
+Vcs-Git: https://salsa.debian.org/debian/ixo-usb-jtag
+Vcs-Browser: https://salsa.debian.org/debian/ixo-usb-jtag
 
 Package: ixo-usb-jtag
 Architecture: all
-Depends: ${misc:Depends} fxload
-Suggests: urjtag
-Description: Firmware for USB JTAG programmers.
+Depends: ${misc:Depends}
+Suggests: fxload
+Description: Altera Bus Blaster emulation using Cypress FX2 chip
+ This firmware allows a USB-capable microcontroller to act like an Altera
+ USB-Blaster JTAG pod. Which in turn may allow you to use tools you'd normally
+ use with the Altera USB-Blaster, including UrJTAG and openocd.
  .
- This firmware allows a USB-capable microcontroller - currently that's
- primarily the Cypress FX2 EZ-USB family, or an FTDI FT245 in combination with
- a CPLD - to act like an Altera USB-Blaster JTAG pod, which in turn may allow
- you to use tools you'd normally use with the Altera USB-Blaster, including
- available Linux tools such as UrJTAG.
+ Supported hardware: The Cypress FX2 EZ-USB family, or an FTDI FT245 in
+ combination with a CPLD. Builds are included for the hdmi2usb project's boards
+ (Digilet Nexys, Nexys2, Atlys and Numato Opsis).

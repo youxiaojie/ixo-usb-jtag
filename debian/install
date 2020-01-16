@@ -1,0 +1,2 @@
+*.hex /lib/firmware/ixo-usb-jtag/
+scripts/ixo-usb-jtag.rules /etc/udev/rules.d/
